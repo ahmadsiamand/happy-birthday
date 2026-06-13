@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ڕۆژی لەدایکبوونی هاوڕێی تاقانەم 🌹</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffeef2 0%, #ffd3dc 100%);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        #loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff5f7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
+
+        .heart-loader {
+            font-size: 45px;
+            animation: pulse 0.8s infinite alternate;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            color: #d63384;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 180px;
+            height: 5px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #ff6b81, #d63384);
+            animation: fillUp 5s linear forwards;
+        }
+
+        #main-content {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            width: 85%;
+            max-width: 330px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px 25px;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(214, 51, 132, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            z-index: 10;
+        }
+
+        #main-content.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .emoji-group {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #d63384;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #ff6b81;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .poem-box {
+            font-size: 1.05rem;
+            line-height: 2.1;
+            color: #444;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .poem-line {
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .hearts-animation {
+            font-size: 1.3rem;
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        .petal {
+            position: absolute;
+            background: #ffb3c1;
+            border-radius: 150% 0 150% 150%;
+            opacity: 0.7;
+            pointer-events: none;
+            animation: fadeAndFall linear infinite;
+        }
+
+        @keyframes pulse {
+            to { transform: scale(1.2); }
+        }
+
+        @keyframes fillUp {
+            to { width: 100%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes fadeAndFall {
+            0% {
+                top: -10%;
+                transform: translateX(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                top: 110%;
+                transform: translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader-wrapper">
+        <div class="heart-loader">🌸</div>
+        <div class="loading-text">چاوەڕوان بە...</div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="emoji-group">
+            <span>🌷</span>
+            <span>💐</span>
+            <span>🌸</span>
+        </div>
+        
+        <h1>ڕۆژی لەدایکبوون پیرۆز</h1>
+        <div class="subtitle"> گەشاوەبێت تەمەنت</div>
+        
+        <div class="poem-box">
+            <span class="poem-line">دونیا پڕ بێ لە گوڵزار و</span>
+            <span class="poem-line">تەمەنت هەر بەهار بێت،</span>
+            <span class="poem-line">تاکو ماوی لەم ژیانە،</span>
+            <span class="poem-line">نوری ئیمان جوانترین دیاریت بێت🌟</span>
+        </div>
+        
+        <div class="hearts-animation">💖💗</div>
+    </div>
+
+    <script>
+        function createPetals() {
+            const body = document.body;
+            for (let i = 0; i < 25; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                const size = Math.random() * 12 + 8;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size}px`;
+                petal.style.left = `${Math.random() * 100}vw`;
+                petal.style.delay = `${Math.random() * 5}s`;
+                petal.style.animationDuration = `${Math.random() * 4 + 4}s`;
+                
+                const colors = ['#ffb3c1', '#ffccd5', '#ff4d6d', '#ff85a1'];
+                petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                body.appendChild(petal);
+            }
+        }
+
+        setTimeout(() => {
+            const loader = document.getElementById('loader-wrapper');
+            const content = document.getElementById('main-content');
+
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 600);
+
+            content.classList.add('show');
+            createPetals();
+
+            fireConfetti();
+        }, 5000);
+
+        function fireConfetti() {
+            var end = Date.now() + (3 * 1000);
+
+            (function frame() {
+                confetti({
+                    particleCount: 2,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff4d6d', '#ff758f', '#ffccd5']
+                });
+                confetti({
+                    particleCount: 2,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff4d6d', '#ff758f', '#ffccd5']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
+</body>
+</html>
